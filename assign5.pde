@@ -466,6 +466,9 @@ void draw() {
 
 		// Requirement #6:
 		//   Call drawCaution() to draw caution sign
+    drawCaution();
+    
+    
 
 		popMatrix();
 
@@ -603,20 +606,36 @@ color getTimeTextColor(int frames){				// Requirement #5
   
 }
 
-int getEnemyIndexByRow(int row){				// Requirement #6
+int getEnemyIndexByRow(int row){
+			// Requirement #6
+   int s=0;
+
+   if(soldierY[1]==(row+5)*80){s=1;}
+   if(soldierY[2]==(row+5)*80){s=2;}
+   if(soldierY[3]==(row+5)*80){s=3;}
+   if(soldierY[4]==(row+5)*80){s=4;}
+   if(soldierY[5]==(row+5)*80){s=5;}
+
+ 
+
+  return s;
+   }
+
+   
 
 		// HINT:
 		// - If there's a soldier in that row, return that soldier's index in soldierX/soldierY
 		// (for example, if soldierY[3] is in that row, return 3)
 		// - Return -1 if there's no soldier in that row
 
-	return -1;
-}
+
 
 void drawCaution(){								// Requirement #6
-
+ 
+ if(getEnemyIndexByRow(playerRow)>0){
+ image(caution,soldierX[getEnemyIndexByRow(playerRow)],soldierY[getEnemyIndexByRow(playerRow)]-80);
 	// Draw a caution sign above the enemy under the screen using int getEnemyIndexByRow(int row)
-
+ }
 		// HINT:
 		// - Use playerRow to calculate the row below the screen
 		// - Use the returned value from int getEnemyIndexByRow(int row) to get the soldier's position from soldierX/soldierY arrays
