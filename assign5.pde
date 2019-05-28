@@ -200,6 +200,10 @@ void initClocks(){
   for(int i = 0; i < clockX.length; i++){
     clockX[i] = SOIL_SIZE * floor(random(SOIL_COL_COUNT));
     clockY[i] = SOIL_SIZE * ( i * 4 + floor(random(4)));
+    
+    if(clockX[i]==cabbageX[i]&&clockY[i]==cabbageY[i]){
+      i--; 
+     }
   }
 }
 
@@ -297,6 +301,7 @@ void draw() {
 			// Requirement #3: Use boolean isHit(...) to detect collision
         if(isHit(playerX,playerY,80,80,cabbageX[i],cabbageY[i],80,80)){
 				playerHealth ++;
+        if(playerHealth>5){playerHealth=5;}
 				cabbageX[i] = cabbageY[i] = -1000;
 
 			}
@@ -439,12 +444,9 @@ void draw() {
 			image(soldier, soldierX[i], soldierY[i]);
 
 			// Requirement #3: Use boolean isHit(...) to detect collision
-			if(soldierX[i] + SOIL_SIZE > playerX    // r1 right edge past r2 left
-		    && soldierX[i] < playerX + SOIL_SIZE    // r1 left edge past r2 right
-		    && soldierY[i] + SOIL_SIZE > playerY    // r1 top edge past r2 bottom
-		    && soldierY[i] < playerY + SOIL_SIZE) { // r1 bottom edge past r2 top
+			if(isHit(playerX,playerY,SOIL_SIZE,SOIL_SIZE,soldierX[i],soldierY[i],SOIL_SIZE,SOIL_SIZE)){
 
-				playerHealth --;
+        playerHealth --;
 
 				if(playerHealth == 0){
 
@@ -547,11 +549,8 @@ void drawDepthUI(){
 }
 
 void drawTimerUI(){
-  int m=floor(gameTimer/60/60);
-  int s=floor(gameTimer/60)-m*60;
-  String sm =nf(m,2);
-  String ss =nf(s,2);
-	String timeString = sm+":"+ss; // Requirement #4: Get the mm:ss string using String convertFramesToTimeString(int frames)
+   String timeString = convertFramesToTimeString(gameTimer);
+// Requirement #4: Get the mm:ss string using String convertFramesToTimeString(int frames)
 
 	textAlign(LEFT, BOTTOM);
 
@@ -574,19 +573,22 @@ void addTime(float seconds){
 
 boolean isHit(float ax, float ay, float aw, float ah, float bx, float by, float bw, float bh){
 
-    return ax + aw > bx &&    // a right edge past b left
-          ax < bx + bw &&    // a left edge past b right
-          ay + ah > by &&    // a top edge past b bottom
-          ay < by + bh;
+    if(ax + aw > bx &&    // a right edge past b left
+     ax < bx + bw &&    // a left edge past b right
+     ay + ah > by &&    // a top edge past b bottom
+     ay < by + bh){
+     return true;
+  }else{
+  return false;}
 
           
    					// Requirement #3
 }
 
 String convertFramesToTimeString(int frames){	// Requirement #4
-   frames=floor(frames/60);
-
-	return ""; 
+  float mm=int(frames/60/60);
+  float ss=int((frames/60))%60;
+  return (nf(int(mm),2)+":"+nf(int(ss),2));
 }
 
 color getTimeTextColor(int frames){				// Requirement #5
